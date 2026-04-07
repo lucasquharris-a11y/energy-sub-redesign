@@ -689,15 +689,16 @@ nav {
   pointer-events: none;
 }
 
-.trust-grid {
+.bento-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
   gap: 16px;
   position: relative;
   z-index: 1;
 }
 
-.trust-card {
+.bento-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -706,28 +707,29 @@ nav {
   position: relative;
   overflow: hidden;
 }
-.trust-card:hover {
+.bento-card:hover {
   border-color: var(--border-hover);
   transform: translateY(-2px);
 }
-.trust-card:nth-child(1) {
-  background: linear-gradient(150deg, rgba(212, 164, 74, 0.05) 0%, var(--bg-card) 35%);
-  border-color: rgba(212, 164, 74, 0.08);
+
+.bento-card.wide { grid-column: span 2; }
+
+/* Unique tints per card */
+.bento-grid .bento-card:nth-child(2) {
+  background: linear-gradient(160deg, rgba(74, 139, 212, 0.04) 0%, var(--bg-card) 40%);
 }
-.trust-card:nth-child(2) {
-  background: linear-gradient(150deg, rgba(74, 139, 212, 0.05) 0%, var(--bg-card) 35%);
-  border-color: rgba(74, 139, 212, 0.08);
+.bento-grid .bento-card:nth-child(3) {
+  background: linear-gradient(160deg, rgba(212, 164, 74, 0.04) 0%, var(--bg-card) 40%);
 }
-.trust-card:nth-child(3) {
-  background: linear-gradient(150deg, rgba(168, 176, 188, 0.04) 0%, var(--bg-card) 35%);
-  border-color: rgba(168, 176, 188, 0.06);
+.bento-grid .bento-card:nth-child(4) {
+  background: linear-gradient(160deg, rgba(168, 176, 188, 0.03) 0%, var(--bg-card) 40%);
+  border-color: rgba(168, 176, 188, 0.08);
 }
-.trust-card:nth-child(4) {
-  background: linear-gradient(150deg, rgba(199, 123, 42, 0.05) 0%, var(--bg-card) 35%);
-  border-color: rgba(199, 123, 42, 0.08);
+.bento-grid .bento-card:nth-child(5) {
+  background: linear-gradient(160deg, rgba(199, 123, 42, 0.035) 0%, var(--bg-card) 40%);
 }
 
-.trust-card .icon-wrapper {
+.bento-card .icon-wrapper {
   width: 52px;
   height: 52px;
   border-radius: 14px;
@@ -740,17 +742,42 @@ nav {
   font-size: 20px;
 }
 
-.trust-card h3 {
+.bento-card h3 {
   font-family: var(--font-serif);
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 12px;
   line-height: 1.3;
 }
-.trust-card p {
+.bento-card p {
   font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.7;
+}
+
+/* Featured bento card */
+.bento-card.featured {
+  background: linear-gradient(135deg, #1a1520 0%, #12101e 40%, #0f1020 100%);
+  border-color: rgba(212, 164, 74, 0.15);
+}
+.bento-card.featured::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(212, 164, 74, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.bento-card.featured .bento-stat {
+  font-family: var(--font-serif);
+  font-size: 64px;
+  font-weight: 400;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 12px;
+  text-shadow: 0 0 60px rgba(212, 164, 74, 0.15);
 }
 
 /* ═══════════════════════════════════════
@@ -1312,7 +1339,8 @@ footer {
   .how-step:nth-child(3) { border-radius: 0 0 0 var(--radius-lg); }
   .how-step:last-child { border-radius: 0 0 var(--radius-lg) 0; }
 
-  .trust-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+  .bento-grid { grid-template-columns: 1fr 1fr; }
+  .bento-card.wide { grid-column: span 2; }
 
   .stats-row { grid-template-columns: 1fr 1fr 1fr; }
 
@@ -1366,8 +1394,10 @@ footer {
   .how-step:last-child { border-radius: 0 0 var(--radius-lg) var(--radius-lg) !important; }
   .how-connector { display: none; }
 
-  .trust-grid { grid-template-columns: 1fr; max-width: 100%; }
-  .trust-card { padding: 32px; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .bento-card.wide { grid-column: span 1; }
+  .bento-card { padding: 32px; }
+  .bento-card.featured .bento-stat { font-size: 48px; }
 
   .stats-row { grid-template-columns: 1fr; }
   .stat-item { padding: 32px 24px; }
@@ -1616,26 +1646,32 @@ footer {
       Every WTIC token is substantiated by physical crude oil, independently custodied and verifiable on-chain.
     </p>
 
-    <div class="trust-grid">
-      <div class="trust-card reveal">
-        <div class="icon-wrapper icon-gold"><i data-lucide="lock-keyhole" style="width:22px;height:22px;"></i></div>
-        <h3>1:1 Commodity Backed</h3>
-        <p>Every outstanding token is substantiated by energy receipts denominating physical crude oil in MMBTU. Receipts are held by the owner of the substantiating volume, with the custodian holding them on behalf of token holders.</p>
+    <div class="bento-grid">
+      <!-- Featured wide card -->
+      <div class="bento-card featured wide reveal">
+        <div class="bento-stat">100%</div>
+        <h3>Physically Backed, Always</h3>
+        <p>Every outstanding WTIC token is substantiated by energy receipts denominating physical crude oil in MMBTU. Receipts are held by the owner of the substantiating volume, with an independent custodian holding them on behalf of token holders. Monthly audits and random surprise inspections verify all balances.</p>
       </div>
-      <div class="trust-card reveal">
+      <div class="bento-card reveal">
         <div class="icon-wrapper icon-blue"><i data-lucide="building-2" style="width:22px;height:22px;"></i></div>
         <h3>Independent Custody</h3>
-        <p>A qualified third-party custodian receives energy receipts upon token minting, audits receipt balances, enforces monthly master supplier certifications, and conducts random surprise audits of physical volumes.</p>
+        <p>A qualified third-party custodian receives energy receipts upon minting, audits balances, enforces monthly supplier certifications, and conducts random surprise audits of physical volumes.</p>
       </div>
-      <div class="trust-card reveal">
-        <div class="icon-wrapper icon-silver"><i data-lucide="scan-eye" style="width:22px;height:22px;"></i></div>
+      <div class="bento-card reveal">
+        <div class="icon-wrapper icon-gold"><i data-lucide="scan-eye" style="width:22px;height:22px;"></i></div>
         <h3>On-Chain Transparency</h3>
-        <p>Aggregate energy balances are reported to a public transparency website and on-chain oracles. Reports include total MMBTU, barrel equivalents, and storage type (pipe, tank, ship).</p>
+        <p>Aggregate energy balances reported to a public transparency website and on-chain oracles. Reports include total MMBTU, barrel equivalents, and storage type.</p>
       </div>
-      <div class="trust-card reveal">
-        <div class="icon-wrapper" style="background: linear-gradient(135deg, rgba(199, 123, 42, 0.1), rgba(199, 123, 42, 0.04)); color: rgba(199, 123, 42, 0.85);"><i data-lucide="scale" style="width:22px;height:22px;"></i></div>
+      <div class="bento-card reveal">
+        <div class="icon-wrapper icon-silver"><i data-lucide="scale" style="width:22px;height:22px;"></i></div>
         <h3>Regulatory Design</h3>
-        <p>WTIC is treated as a spot commodity, not a security. Primary market (minting/burning) is KYC/AML gated. On-chain Blacklist function for sanctions compliance. Issued by Kardashev Ltd (BVI).</p>
+        <p>Treated as a spot commodity, not a security. Primary market is KYC/AML gated. On-chain Blacklist for sanctions compliance. Issued by Kardashev Ltd (BVI).</p>
+      </div>
+      <div class="bento-card reveal">
+        <div class="icon-wrapper" style="background: linear-gradient(135deg, rgba(199, 123, 42, 0.1), rgba(199, 123, 42, 0.04)); color: rgba(199, 123, 42, 0.85);"><i data-lucide="shield-check" style="width:22px;height:22px;"></i></div>
+        <h3>Audited Smart Contracts</h3>
+        <p>Non-upgradeable ERC-20 contracts audited by Sigma Prime. Multi-signature governance with PAUSER and BLACKLISTER roles for emergency controls.</p>
       </div>
     </div>
   </div>
