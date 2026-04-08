@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Receive WTIc — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --bg-sidebar: #0b0b10;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --blue-energy: #4a8bd4;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body { height: 100%; font-family: var(--font-sans); background: var(--bg-primary); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+body { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; flex-shrink: 0; position: fixed; top: 0; bottom: 0; left: 0; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 24px; margin-bottom: 40px; }
+.sidebar-logo-icon { display: flex; flex-direction: column; gap: 2px; width: 16px; }
+.sidebar-logo-icon span { display: block; height: 2px; background: var(--gold); border-radius: 1px; }
+.sidebar-logo-text { display: flex; flex-direction: column; font-weight: 700; font-size: 13px; letter-spacing: -0.01em; line-height: 1.15; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--text-primary); background: rgba(212,164,74,0.06); }
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; color: var(--gold); }
+.nav-item .nav-label { flex: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 16px 16px; }
+.sidebar-bottom { padding: 0 12px; margin-top: auto; }
+.sidebar-user { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; cursor: pointer; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, rgba(212,164,74,0.2), rgba(74,139,212,0.15)); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--gold); }
+.user-info { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-email { font-size: 11px; color: var(--text-tertiary); }
+
+/* Main */
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 32px 40px;
+  min-height: 100vh;
+}
+
+.back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-tertiary); text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; font-family: var(--font-sans); margin-bottom: 12px; }
+.back-btn:hover { color: var(--text-secondary); }
+.back-btn svg { width: 16px; height: 16px; }
+
+.page-title {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 36px;
+}
+
+.receive-wrapper {
+  max-width: 480px;
+}
+
+/* QR card */
+.qr-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 44px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.qr-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,164,74,0.12), transparent);
+}
+
+.qr-card::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 120px;
+  background: radial-gradient(ellipse, rgba(212, 164, 74, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.qr-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* QR code */
+.qr-frame {
+  width: 220px;
+  height: 220px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 0 auto 28px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.qr-inner {
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(#1a1a1a 0% 25%, transparent 0% 50%) 0 0 / 12px 12px;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Gold logo overlay in center of QR */
+.qr-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  background: var(--gold);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.qr-logo-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 16px;
+}
+
+.qr-logo-icon span {
+  display: block;
+  height: 2.5px;
+  background: var(--bg-primary);
+  border-radius: 1px;
+}
+
+/* Network badge */
+.network-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.network-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #627eea;
+}
+
+/* Address display */
+.address-display {
+  position: relative;
+  z-index: 1;
+}
+
+.address-full {
+  font-family: 'Inter', monospace;
+  font-size: 14px;
+  color: var(--text-primary);
+  letter-spacing: 0.03em;
+  word-break: break-all;
+  line-height: 1.6;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-copy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+.btn-copy svg { width: 16px; height: 16px; }
+
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-share:hover {
+  border-color: var(--border-hover);
+  background: rgba(255,255,255,0.02);
+}
+
+.btn-share svg { width: 16px; height: 16px; }
+
+/* Supported tokens */
+.supported-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+}
+
+.supported-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: 0.03em;
+}
+
+.supported-tokens {
+  display: flex;
+  gap: 10px;
+}
+
+.supported-token {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.token-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.token-dot.gold { background: var(--gold); }
+.token-dot.blue { background: var(--blue-energy); }
+
+/* Info note */
+.info-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(74, 139, 212, 0.03);
+  border: 1px solid rgba(74, 139, 212, 0.06);
+  border-radius: var(--radius-sm);
+  margin-top: 20px;
+}
+
+.info-note svg {
+  width: 16px;
+  height: 16px;
+  color: var(--blue-energy);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.info-note p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="sidebar-logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="07-portfolio-balance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="nav-label">Portfolio</span></a>
+    <a class="nav-item" href="08-fund-account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="nav-label">Buy</span></a>
+    <a class="nav-item" href="11-send-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg><span class="nav-label">Send</span></a>
+    <a class="nav-item active" href="12-receive-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg><span class="nav-label">Receive</span></a>
+    <div class="sidebar-divider"></div>
+    <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-user">
+      <div class="user-avatar">JS</div>
+      <div class="user-info"><div class="user-name">John Smith</div><div class="user-email">john@example.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <button class="back-btn" onclick="window.location.href='07-portfolio-balance.html'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    Back to Portfolio
+  </button>
+  <h1 class="page-title">Receive WTIc</h1>
+
+  <div class="receive-wrapper">
+    <div class="qr-card">
+      <p class="qr-label">Scan to send WTIc or USDC to this address</p>
+
+      <div class="qr-frame">
+        <div class="qr-inner">
+          <div class="qr-logo">
+            <div class="qr-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="network-badge">
+        <div class="network-dot"></div>
+        Ethereum Mainnet
+      </div>
+
+      <div class="address-display">
+        <div class="address-full">0x8a3F92B7c4D1e6A09f2C83b5E7dF4A2c9e7D...f2c1</div>
+        <div class="action-buttons">
+          <button class="btn-copy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Address
+          </button>
+          <button class="btn-share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="supported-card">
+      <h3>Supported Tokens</h3>
+      <div class="supported-tokens">
+        <div class="supported-token">
+          <div class="token-dot gold"></div>
+          WTIc
+        </div>
+        <div class="supported-token">
+          <div class="token-dot blue"></div>
+          USDC
+        </div>
+      </div>
+    </div>
+
+    <div class="info-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <p>Only send WTIc or USDC on Ethereum Mainnet to this address. Sending other tokens or using other networks may result in permanent loss of funds.</p>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Purpose — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  padding: 60px 0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow-gold {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 164, 74, 0.07) 0%, transparent 65%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.bg-glow-blue {
+  position: fixed;
+  bottom: 10%;
+  right: 15%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(74, 139, 212, 0.04) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.onboarding-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+.logo-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 18px;
+}
+
+.logo-icon span {
+  display: block;
+  height: 2.5px;
+  background: var(--gold);
+  border-radius: 1px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.1s forwards;
+}
+
+.progress-step {
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progress-step.done { background: var(--gold); opacity: 0.5; }
+.progress-step.active { background: var(--gold); box-shadow: 0 0 8px rgba(212, 164, 74, 0.3); }
+
+.progress-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  margin-left: 4px;
+}
+
+.card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 44px 40px 40px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeUp 0.7s ease-out 0.15s forwards;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 164, 74, 0.15) 30%, rgba(212, 164, 74, 0.25) 50%, rgba(212, 164, 74, 0.15) 70%, transparent 100%);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 160px;
+  background: radial-gradient(ellipse, rgba(212, 164, 74, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-header h1 {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.card-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Option cards */
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.option-card:hover {
+  border-color: var(--border-hover);
+  background: rgba(15, 15, 20, 0.8);
+}
+
+.option-card.selected {
+  border-color: rgba(212, 164, 74, 0.35);
+  background: rgba(212, 164, 74, 0.04);
+}
+
+.option-card input[type="radio"] {
+  display: none;
+}
+
+.option-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.option-card.selected .option-radio {
+  border-color: var(--gold);
+}
+
+.option-radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  transform: scale(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.option-card.selected .option-radio::after {
+  transform: scale(1);
+}
+
+.option-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.option-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.option-icon.gold { background: rgba(212, 164, 74, 0.08); color: var(--gold); }
+.option-icon.blue { background: rgba(74, 139, 212, 0.08); color: var(--blue-energy); }
+.option-icon.silver { background: rgba(168, 176, 188, 0.08); color: #a8b0bc; }
+
+.option-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.option-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+/* Other input */
+.other-input-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.other-input-wrapper.visible {
+  max-height: 80px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.other-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.other-input::placeholder { color: var(--text-tertiary); }
+.other-input:focus {
+  border-color: rgba(212, 164, 74, 0.3);
+  box-shadow: 0 0 0 3px rgba(212, 164, 74, 0.06);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px 32px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+.back-link {
+  margin-top: 24px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.3s forwards;
+}
+
+.back-link a {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-link a:hover { color: var(--text-secondary); }
+.back-link svg { width: 14px; height: 14px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<div class="bg-glow-gold"></div>
+<div class="bg-glow-blue"></div>
+
+<div class="onboarding-wrapper">
+
+  <div class="logo">
+    <div class="logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-step done"></div>
+    <div class="progress-step done"></div>
+    <div class="progress-step done"></div>
+    <div class="progress-step active"></div>
+    <span class="progress-label">Step 4 of 4</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h1>Investment Purpose</h1>
+      <p>Help us understand your interest in tokenized energy</p>
+    </div>
+
+    <div class="option-group">
+      <label class="option-card selected" onclick="selectOption(this)">
+        <input type="radio" name="purpose" value="diversification" checked>
+        <div class="option-radio"></div>
+        <div class="option-icon gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+        </div>
+        <div>
+          <div class="option-label">Portfolio Diversification</div>
+          <div class="option-desc">Add energy exposure to a broader portfolio</div>
+        </div>
+      </label>
+
+      <label class="option-card" onclick="selectOption(this)">
+        <input type="radio" name="purpose" value="hedging">
+        <div class="option-radio"></div>
+        <div class="option-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="option-label">Hedging</div>
+          <div class="option-desc">Offset energy cost exposure in business or portfolio</div>
+        </div>
+      </label>
+
+      <label class="option-card" onclick="selectOption(this)">
+        <input type="radio" name="purpose" value="trading">
+        <div class="option-radio"></div>
+        <div class="option-icon gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div>
+          <div class="option-label">Speculation & Trading</div>
+          <div class="option-desc">Actively trade energy price movements</div>
+        </div>
+      </label>
+
+      <label class="option-card" onclick="selectOption(this)">
+        <input type="radio" name="purpose" value="institutional">
+        <div class="option-radio"></div>
+        <div class="option-icon silver">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/><circle cx="12" cy="14" r="2"/></svg>
+        </div>
+        <div>
+          <div class="option-label">Institutional Allocation</div>
+          <div class="option-desc">Fund or entity seeking commodity-backed digital assets</div>
+        </div>
+      </label>
+
+      <label class="option-card" onclick="selectOption(this)" id="other-option">
+        <input type="radio" name="purpose" value="other">
+        <div class="option-radio"></div>
+        <div class="option-icon blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </div>
+        <div>
+          <div class="option-label">Other</div>
+          <div class="option-desc">Tell us more about your interest</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="other-input-wrapper" id="otherInput">
+      <input class="other-input" type="text" placeholder="What brings you to Energy Substantiation?">
+    </div>
+
+    <button class="btn-primary" onclick="window.location.href='06-portfolio-empty.html'">Complete Setup</button>
+  </div>
+
+  <div class="back-link">
+    <a href="04-personal-info.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back
+    </a>
+  </div>
+
+</div>
+
+<script>
+function selectOption(el) {
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const other = document.getElementById('otherInput');
+  if (el.id === 'other-option') {
+    other.classList.add('visible');
+    other.querySelector('input').focus();
+  } else {
+    other.classList.remove('visible');
+  }
+}
+</script>
+</body>
+</html>

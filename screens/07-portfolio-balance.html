@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --bg-sidebar: #0b0b10;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --silver: #a8b0bc;
+  --green: #4ade80;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+body { display: flex; min-height: 100vh; }
+
+/* ── Sidebar (same as screen 6) ── */
+.sidebar {
+  width: 240px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+  margin-bottom: 40px;
+}
+
+.sidebar-logo-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 16px;
+}
+
+.sidebar-logo-icon span {
+  display: block;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 1px;
+}
+
+.sidebar-logo-text {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--text-primary); background: rgba(212,164,74,0.06); }
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; color: var(--gold); }
+.nav-item .nav-label { flex: 1; }
+
+.sidebar-divider { height: 1px; background: var(--border); margin: 16px 16px; }
+
+.sidebar-bottom { padding: 0 12px; margin-top: auto; }
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sidebar-user:hover { background: rgba(255,255,255,0.03); }
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,164,74,0.2), rgba(74,139,212,0.15));
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-email { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── Main ── */
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 32px 40px;
+  min-height: 100vh;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.top-actions { display: flex; gap: 12px; }
+
+.btn-gold {
+  padding: 10px 24px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(240,236,228,0.15); }
+
+/* ── Balance hero ── */
+.balance-hero {
+  margin-bottom: 28px;
+}
+
+.balance-label {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.balance-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.balance-amount {
+  font-family: var(--font-sans);
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.balance-change {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.balance-change svg {
+  width: 14px;
+  height: 14px;
+}
+
+.balance-units {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* Action buttons row (Fuse-style) */
+.action-row {
+  display: flex;
+  gap: 12px;
+  margin: 28px 0;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  border-color: var(--border-hover);
+  background: rgba(19, 19, 26, 0.8);
+  transform: translateY(-1px);
+}
+
+.action-btn svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.action-btn.buy {
+  background: #f0ece4;
+  color: #08080c;
+  border-color: #f0ece4;
+}
+
+.action-btn.buy:hover {
+  box-shadow: 0 4px 16px rgba(240, 236, 228, 0.15);
+}
+
+.action-btn.buy svg { opacity: 1; }
+
+/* ── Chart ── */
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.chart-tab {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+
+.chart-tab:hover { color: var(--text-secondary); }
+
+.chart-tab.active {
+  background: rgba(240, 236, 228, 0.1);
+  color: var(--text-primary);
+}
+
+.chart-area {
+  width: 100%;
+  height: 220px;
+  position: relative;
+}
+
+.chart-area svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Y-axis labels */
+.chart-y-labels {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.chart-y-labels span {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+/* ── Content grid (bottom half) ── */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+}
+
+/* Transactions */
+.transactions-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+
+.transactions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.transactions-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.view-all {
+  font-size: 13px;
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.view-all:hover { color: var(--text-primary); }
+
+.tx-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.tx-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tx-row:last-child { border-bottom: none; }
+
+.tx-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tx-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tx-icon.buy-icon {
+  background: rgba(74, 222, 128, 0.08);
+  color: var(--green);
+}
+
+.tx-icon.send-icon {
+  background: rgba(74, 139, 212, 0.08);
+  color: var(--blue-energy);
+}
+
+.tx-icon.receive-icon {
+  background: rgba(212, 164, 74, 0.08);
+  color: var(--gold);
+}
+
+.tx-info { flex: 1; }
+.tx-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.tx-info p { font-size: 12px; color: var(--text-tertiary); }
+
+.tx-amount { text-align: right; }
+.tx-amount h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.tx-amount p { font-size: 12px; color: var(--text-tertiary); }
+
+.tx-amount.positive h4 { color: var(--green); }
+
+/* Holdings summary */
+.holdings-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+
+.holdings-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.holding-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+}
+
+.holding-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,164,74,0.15), rgba(212,164,74,0.05));
+  border: 1px solid rgba(212,164,74,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.holding-info { flex: 1; }
+.holding-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+.holding-info p { font-size: 12px; color: var(--text-tertiary); }
+
+.holding-value { text-align: right; }
+.holding-value h4 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+.holding-value p { font-size: 12px; color: var(--green); font-weight: 500; }
+
+/* USDC balance */
+.usdc-balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-top: 16px;
+}
+
+.usdc-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.usdc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(74, 139, 212, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue-energy);
+}
+
+.usdc-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.usdc-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="sidebar-logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item active" href="07-portfolio-balance.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-label">Portfolio</span>
+    </a>
+    <a class="nav-item" href="08-fund-account.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span class="nav-label">Buy</span>
+    </a>
+    <a class="nav-item" href="11-send-wtic.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+      <span class="nav-label">Send</span>
+    </a>
+    <a class="nav-item" href="12-receive-wtic.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg>
+      <span class="nav-label">Receive</span>
+    </a>
+    <div class="sidebar-divider"></div>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="nav-label">Settings</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-user">
+      <div class="user-avatar">JS</div>
+      <div class="user-info">
+        <div class="user-name">John Smith</div>
+        <div class="user-email">john@example.com</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="top-bar">
+    <h1 class="page-title">Portfolio</h1>
+    <div class="top-actions">
+      <button class="btn-gold" onclick="window.location.href='08-fund-account.html'">Buy WTIc</button>
+    </div>
+  </div>
+
+  <!-- Balance hero -->
+  <div class="balance-hero">
+    <div class="balance-label">Total Balance</div>
+    <div class="balance-row">
+      <div class="balance-amount">$855.25</div>
+      <div class="balance-change">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        +$15.63 (+1.86%)
+      </div>
+    </div>
+    <div class="balance-units">12.5 WTIc</div>
+  </div>
+
+  <!-- Action row -->
+  <div class="action-row">
+    <button class="action-btn buy" onclick="window.location.href='08-fund-account.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      Buy
+    </button>
+    <button class="action-btn" onclick="window.location.href='11-send-wtic.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+      Send
+    </button>
+    <button class="action-btn" onclick="window.location.href='12-receive-wtic.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg>
+      Receive
+    </button>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <span class="chart-title">WTIc Price</span>
+      <div class="chart-tabs">
+        <button class="chart-tab">24H</button>
+        <button class="chart-tab active">7D</button>
+        <button class="chart-tab">30D</button>
+        <button class="chart-tab">ALL</button>
+      </div>
+    </div>
+    <div class="chart-area">
+      <svg viewBox="0 0 800 220" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(74,222,128,0.12)"/>
+            <stop offset="100%" stop-color="rgba(74,222,128,0)"/>
+          </linearGradient>
+        </defs>
+        <!-- Grid lines -->
+        <line x1="0" y1="44" x2="800" y2="44" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="88" x2="800" y2="88" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="132" x2="800" y2="132" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="0" y1="176" x2="800" y2="176" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <!-- Fill -->
+        <path d="M0,160 C30,155 60,148 100,140 C140,132 170,120 220,115 C270,110 310,125 360,130 C410,135 440,105 500,90 C560,75 600,80 660,65 C720,50 760,35 800,30 L800,220 L0,220 Z" fill="url(#chartGrad)"/>
+        <!-- Line -->
+        <path d="M0,160 C30,155 60,148 100,140 C140,132 170,120 220,115 C270,110 310,125 360,130 C410,135 440,105 500,90 C560,75 600,80 660,65 C720,50 760,35 800,30" fill="none" stroke="#4ade80" stroke-width="2"/>
+        <!-- Current price dot -->
+        <circle cx="800" cy="30" r="5" fill="#4ade80"/>
+        <circle cx="800" cy="30" r="8" fill="none" stroke="#4ade80" stroke-width="1" opacity="0.3">
+          <animate attributeName="r" values="8;14;8" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+      <div class="chart-y-labels">
+        <span>$70</span>
+        <span>$69</span>
+        <span>$68</span>
+        <span>$67</span>
+        <span>$66</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom grid -->
+  <div class="bottom-grid">
+    <!-- Transactions -->
+    <div class="transactions-card">
+      <div class="transactions-header">
+        <h3>Recent Transactions</h3>
+        <a class="view-all">View all</a>
+      </div>
+      <div class="tx-list">
+        <div class="tx-row">
+          <div class="tx-icon buy-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          </div>
+          <div class="tx-info">
+            <h4>Minted WTIc</h4>
+            <p>Feb 18, 2026 · 2:14 PM</p>
+          </div>
+          <div class="tx-amount positive">
+            <h4>+5.0 WTIc</h4>
+            <p>$342.10</p>
+          </div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon buy-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+          </div>
+          <div class="tx-info">
+            <h4>Minted WTIc</h4>
+            <p>Feb 15, 2026 · 10:32 AM</p>
+          </div>
+          <div class="tx-amount positive">
+            <h4>+7.5 WTIc</h4>
+            <p>$506.25</p>
+          </div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon receive-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg>
+          </div>
+          <div class="tx-info">
+            <h4>Deposited USDC</h4>
+            <p>Feb 15, 2026 · 10:28 AM</p>
+          </div>
+          <div class="tx-amount positive">
+            <h4>+$1,000.00</h4>
+            <p>USDC</p>
+          </div>
+        </div>
+        <div class="tx-row">
+          <div class="tx-icon send-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+          </div>
+          <div class="tx-info">
+            <h4>Sent WTIc</h4>
+            <p>Feb 14, 2026 · 4:05 PM</p>
+          </div>
+          <div class="tx-amount">
+            <h4>-2.0 WTIc</h4>
+            <p>to 0x8a3...f2c1</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Holdings -->
+    <div>
+      <div class="holdings-card">
+        <h3>Holdings</h3>
+        <div class="holding-item">
+          <div class="holding-icon">W</div>
+          <div class="holding-info">
+            <h4>WTIc</h4>
+            <p>12.5 tokens</p>
+          </div>
+          <div class="holding-value">
+            <h4>$855.25</h4>
+            <p>+1.86%</p>
+          </div>
+        </div>
+
+        <div class="usdc-balance">
+          <div class="usdc-left">
+            <div class="usdc-icon">$</div>
+            <span class="usdc-label">USDC Balance</span>
+          </div>
+          <span class="usdc-value">$144.75</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

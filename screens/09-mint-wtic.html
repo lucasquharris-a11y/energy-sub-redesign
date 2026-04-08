@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mint WTIc — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --bg-sidebar: #0b0b10;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --silver: #a8b0bc;
+  --green: #4ade80;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body { height: 100%; font-family: var(--font-sans); background: var(--bg-primary); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+body { display: flex; min-height: 100vh; }
+
+/* Sidebar (compact) */
+.sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; flex-shrink: 0; position: fixed; top: 0; bottom: 0; left: 0; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 24px; margin-bottom: 40px; }
+.sidebar-logo-icon { display: flex; flex-direction: column; gap: 2px; width: 16px; }
+.sidebar-logo-icon span { display: block; height: 2px; background: var(--gold); border-radius: 1px; }
+.sidebar-logo-text { display: flex; flex-direction: column; font-weight: 700; font-size: 13px; letter-spacing: -0.01em; line-height: 1.15; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--text-primary); background: rgba(212,164,74,0.06); }
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; color: var(--gold); }
+.nav-item .nav-label { flex: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 16px 16px; }
+.sidebar-bottom { padding: 0 12px; margin-top: auto; }
+.sidebar-user { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; cursor: pointer; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, rgba(212,164,74,0.2), rgba(74,139,212,0.15)); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--gold); }
+.user-info { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-email { font-size: 11px; color: var(--text-tertiary); }
+
+/* Main */
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 32px 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-tertiary); text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; font-family: var(--font-sans); margin-bottom: 12px; }
+.back-btn:hover { color: var(--text-secondary); }
+.back-btn svg { width: 16px; height: 16px; }
+
+.page-title {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 36px;
+}
+
+/* Mint form — centered card */
+.mint-wrapper {
+  max-width: 520px;
+  width: 100%;
+}
+
+/* Amount input */
+.amount-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.amount-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,164,74,0.1), transparent);
+}
+
+.amount-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.amount-input-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.amount-input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 48px;
+  font-weight: 600;
+  width: 100%;
+  outline: none;
+  caret-color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+.amount-input::placeholder {
+  color: var(--text-tertiary);
+  opacity: 0.4;
+}
+
+.amount-unit {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.amount-usd {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Preset amounts */
+.presets {
+  display: flex;
+  gap: 8px;
+}
+
+.preset-btn {
+  padding: 8px 18px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.preset-btn.active {
+  background: rgba(212, 164, 74, 0.08);
+  border-color: rgba(212, 164, 74, 0.2);
+  color: var(--gold);
+}
+
+/* Details card */
+.details-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-row.total {
+  border-bottom: none;
+  padding-top: 16px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.detail-label svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-tertiary);
+  cursor: help;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.detail-row.total .detail-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.detail-row.total .detail-value {
+  font-size: 16px;
+  color: var(--gold);
+}
+
+/* Available balance */
+.balance-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+.balance-note-left {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.balance-note-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-energy);
+}
+
+/* CTA */
+.btn-primary {
+  width: 100%;
+  padding: 16px 32px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="sidebar-logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="07-portfolio-balance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="nav-label">Portfolio</span></a>
+    <a class="nav-item active" href="08-fund-account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="nav-label">Buy</span></a>
+    <a class="nav-item" href="11-send-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg><span class="nav-label">Send</span></a>
+    <a class="nav-item" href="12-receive-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg><span class="nav-label">Receive</span></a>
+    <div class="sidebar-divider"></div>
+    <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-user">
+      <div class="user-avatar">JS</div>
+      <div class="user-info"><div class="user-name">John Smith</div><div class="user-email">john@example.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <button class="back-btn" onclick="window.location.href='08-fund-account.html'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    Back
+  </button>
+  <h1 class="page-title">Mint WTIc</h1>
+
+  <div class="mint-wrapper">
+    <!-- Amount input -->
+    <div class="amount-card">
+      <div class="amount-label">How much WTIc do you want?</div>
+      <div class="amount-input-row">
+        <input class="amount-input" type="text" value="7.5" placeholder="0.0" id="amountInput">
+        <span class="amount-unit">WTIc</span>
+      </div>
+      <div class="amount-usd" id="usdEquiv">~ $513.15 USD</div>
+      <div class="presets">
+        <button class="preset-btn" onclick="setAmount(1.46)">$100</button>
+        <button class="preset-btn active" onclick="setAmount(7.31)">$500</button>
+        <button class="preset-btn" onclick="setAmount(14.62)">$1,000</button>
+        <button class="preset-btn" onclick="setAmount(73.1)">$5,000</button>
+      </div>
+    </div>
+
+    <!-- Order details -->
+    <div class="details-card">
+      <div class="detail-row">
+        <span class="detail-label">Exchange rate</span>
+        <span class="detail-value">1 WTIc = $68.42</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">
+          Network fee
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </span>
+        <span class="detail-value">$2.40</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">
+          Mint fee (0.1%)
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </span>
+        <span class="detail-value">$0.51</span>
+      </div>
+      <div class="detail-row total">
+        <span class="detail-label">Total USDC needed</span>
+        <span class="detail-value">$516.06</span>
+      </div>
+    </div>
+
+    <!-- Balance -->
+    <div class="balance-note">
+      <span class="balance-note-left">Available USDC</span>
+      <span class="balance-note-value">$1,144.75</span>
+    </div>
+
+    <!-- CTA -->
+    <button class="btn-primary" onclick="window.location.href='10-confirm-success.html'">Review Order</button>
+  </div>
+</main>
+
+<script>
+function setAmount(wtic) {
+  document.getElementById('amountInput').value = wtic.toFixed(2);
+  document.getElementById('usdEquiv').textContent = '~ $' + (wtic * 68.42).toFixed(2) + ' USD';
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

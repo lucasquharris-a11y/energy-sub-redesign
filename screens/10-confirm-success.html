@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirm Mint — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --bg-sidebar: #0b0b10;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --green: #4ade80;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body { height: 100%; font-family: var(--font-sans); background: var(--bg-primary); color: var(--text-primary); -webkit-font-smoothing: antialiased; }
+body { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 240px; background: var(--bg-sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; flex-shrink: 0; position: fixed; top: 0; bottom: 0; left: 0; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 24px; margin-bottom: 40px; }
+.sidebar-logo-icon { display: flex; flex-direction: column; gap: 2px; width: 16px; }
+.sidebar-logo-icon span { display: block; height: 2px; background: var(--gold); border-radius: 1px; }
+.sidebar-logo-text { display: flex; flex-direction: column; font-weight: 700; font-size: 13px; letter-spacing: -0.01em; line-height: 1.15; }
+.sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; }
+.nav-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all 0.2s; cursor: pointer; }
+.nav-item:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--text-primary); background: rgba(212,164,74,0.06); }
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active svg { opacity: 1; color: var(--gold); }
+.nav-item .nav-label { flex: 1; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 16px 16px; }
+.sidebar-bottom { padding: 0 12px; margin-top: auto; }
+.sidebar-user { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 10px; cursor: pointer; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, rgba(212,164,74,0.2), rgba(74,139,212,0.15)); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--gold); }
+.user-info { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-email { font-size: 11px; color: var(--text-tertiary); }
+
+/* Main */
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 32px 40px;
+  min-height: 100vh;
+}
+
+/* ═══ CONFIRM STATE ═══ */
+.confirm-state {
+  max-width: 520px;
+}
+
+.back-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-tertiary); text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; font-family: var(--font-sans); margin-bottom: 12px; }
+.back-btn:hover { color: var(--text-secondary); }
+.back-btn svg { width: 16px; height: 16px; }
+
+.page-title {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 32px;
+}
+
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.review-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,164,74,0.12), transparent);
+}
+
+.review-hero {
+  text-align: center;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.review-amount {
+  font-family: var(--font-sans);
+  font-size: 44px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.review-amount span {
+  color: var(--gold);
+}
+
+.review-usd {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.review-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.review-row + .review-row {
+  border-top: 1px solid var(--border);
+}
+
+.review-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.review-value {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.review-row.total {
+  padding-top: 20px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.review-row.total .review-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.review-row.total .review-value {
+  font-size: 18px;
+  color: var(--gold);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px 32px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+.disclaimer {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+/* ═══ SUCCESS STATE ═══ */
+.success-state {
+  display: none;
+  max-width: 520px;
+  text-align: center;
+  margin-top: 80px;
+}
+
+.success-state.visible { display: block; }
+.confirm-state.hidden { display: none; }
+
+/* Success ring */
+.success-ring {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,164,74,0.1), rgba(212,164,74,0.04));
+  border: 2px solid rgba(212, 164, 74, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px;
+  position: relative;
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.success-ring::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,164,74,0.08) 0%, transparent 70%);
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.success-check {
+  width: 40px;
+  height: 40px;
+  color: var(--gold);
+  position: relative;
+  z-index: 1;
+}
+
+.success-check path {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: drawCheck 0.6s ease-out 0.3s forwards;
+}
+
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.success-title {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.4s forwards;
+}
+
+.success-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.success-detail {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.5s forwards;
+}
+
+.success-subdetail {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.55s forwards;
+}
+
+/* Summary card in success */
+.success-summary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  text-align: left;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.6s forwards;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.summary-row + .summary-row {
+  border-top: 1px solid var(--border);
+}
+
+.summary-label { font-size: 13px; color: var(--text-secondary); }
+.summary-value { font-size: 13px; font-weight: 600; }
+
+.btn-view-portfolio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 36px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.7s forwards;
+}
+
+.btn-view-portfolio:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+/* Gold particle dots */
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  display: none;
+}
+
+.particles.visible { display: block; }
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="sidebar-logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item" href="07-portfolio-balance.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="nav-label">Portfolio</span></a>
+    <a class="nav-item active" href="08-fund-account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="nav-label">Buy</span></a>
+    <a class="nav-item" href="11-send-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg><span class="nav-label">Send</span></a>
+    <a class="nav-item" href="12-receive-wtic.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 7L7.8 16.2M7 7v10h10"/></svg><span class="nav-label">Receive</span></a>
+    <div class="sidebar-divider"></div>
+    <a class="nav-item" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span class="nav-label">Settings</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-user">
+      <div class="user-avatar">JS</div>
+      <div class="user-info"><div class="user-name">John Smith</div><div class="user-email">john@example.com</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- Particles for success -->
+<div class="particles" id="particles"></div>
+
+<main class="main">
+
+  <!-- CONFIRM STATE -->
+  <div class="confirm-state" id="confirmState">
+    <button class="back-btn" onclick="window.location.href='09-mint-wtic.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back
+    </button>
+    <h1 class="page-title">Confirm Mint</h1>
+
+    <div class="review-card">
+      <div class="review-hero">
+        <div class="review-amount"><span>7.5</span> WTIc</div>
+        <div class="review-usd">~ $513.15 USD</div>
+      </div>
+
+      <div class="review-row">
+        <span class="review-label">Exchange rate</span>
+        <span class="review-value">1 WTIc = $68.42</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Network fee</span>
+        <span class="review-value">$2.40</span>
+      </div>
+      <div class="review-row">
+        <span class="review-label">Mint fee (0.1%)</span>
+        <span class="review-value">$0.51</span>
+      </div>
+      <div class="review-row total">
+        <span class="review-label">Total</span>
+        <span class="review-value">$516.06</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="showSuccess()">Confirm Mint</button>
+    <p class="disclaimer">By confirming, you agree to mint WTIc tokens at the current market rate. This transaction is final and cannot be reversed.</p>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="success-state" id="successState">
+    <div class="success-ring">
+      <svg class="success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+
+    <h2 class="success-title">You Now Own<br><em>7.5 WTIc</em></h2>
+    <p class="success-detail">$513.15 in tokenized crude oil</p>
+    <p class="success-subdetail">Transaction confirmed on Ethereum</p>
+
+    <div class="success-summary">
+      <div class="summary-row">
+        <span class="summary-label">WTIc minted</span>
+        <span class="summary-value">7.5 WTIc</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">USDC spent</span>
+        <span class="summary-value">$516.06</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Rate</span>
+        <span class="summary-value">$68.42 / WTIc</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">Transaction hash</span>
+        <span class="summary-value" style="color:var(--blue-energy);font-size:12px;">0x7a3f...e8c2</span>
+      </div>
+    </div>
+
+    <button class="btn-view-portfolio" onclick="window.location.href='07-portfolio-balance.html'">View Portfolio</button>
+  </div>
+</main>
+
+<script>
+function showSuccess() {
+  document.getElementById('confirmState').classList.add('hidden');
+  document.getElementById('successState').classList.add('visible');
+  document.getElementById('particles').classList.add('visible');
+  createParticles();
+}
+
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = (30 + Math.random() * 40) + '%';
+    p.style.top = (20 + Math.random() * 30) + '%';
+    p.style.width = (2 + Math.random() * 4) + 'px';
+    p.style.height = p.style.width;
+    p.style.animation = `particleFade ${1 + Math.random() * 2}s ease-out ${Math.random() * 0.5}s forwards`;
+    container.appendChild(p);
+  }
+  const style = document.createElement('style');
+  style.textContent = `@keyframes particleFade {
+    0% { opacity: 0; transform: translate(0, 0) scale(0); }
+    30% { opacity: 0.8; }
+    100% { opacity: 0; transform: translate(${()=>''}var(--dx), var(--dy)) scale(1); }
+  }`;
+  document.head.appendChild(style);
+  // Set random directions
+  container.querySelectorAll('.particle').forEach(p => {
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 40 + Math.random() * 80;
+    p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Email — Energy Substantiation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow-gold {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 164, 74, 0.07) 0%, transparent 65%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.bg-glow-blue {
+  position: fixed;
+  bottom: 10%;
+  right: 20%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(74, 139, 212, 0.04) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.onboarding-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+.logo-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 18px;
+}
+
+.logo-icon span {
+  display: block;
+  height: 2.5px;
+  background: var(--gold);
+  border-radius: 1px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+/* Progress */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.1s forwards;
+}
+
+.progress-step {
+  width: 32px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progress-step.done {
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+.progress-step.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(212, 164, 74, 0.3);
+}
+
+.progress-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  margin-left: 4px;
+}
+
+/* Card */
+.card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px 40px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeUp 0.7s ease-out 0.15s forwards;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 164, 74, 0.15) 30%, rgba(212, 164, 74, 0.25) 50%, rgba(212, 164, 74, 0.15) 70%, transparent 100%);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 160px;
+  background: radial-gradient(ellipse, rgba(212, 164, 74, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Envelope icon */
+.icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 164, 74, 0.1), rgba(212, 164, 74, 0.04));
+  border: 1px solid rgba(212, 164, 74, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.icon-circle svg {
+  width: 32px;
+  height: 32px;
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+/* Subtle pulse ring */
+.icon-circle::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 164, 74, 0.08);
+  animation: pulseRing 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-header h1 {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.card-header p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.card-header .email-highlight {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Code input */
+.code-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.code-input {
+  width: 52px;
+  height: 60px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  caret-color: var(--gold);
+}
+
+.code-input:focus {
+  border-color: rgba(212, 164, 74, 0.3);
+  box-shadow: 0 0 0 3px rgba(212, 164, 74, 0.06);
+}
+
+.code-input:hover:not(:focus) {
+  border-color: var(--border-hover);
+}
+
+/* Button */
+.btn-primary {
+  width: 100%;
+  padding: 14px 32px;
+  background: #f0ece4;
+  color: #08080c;
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+/* Resend */
+.resend {
+  text-align: center;
+  margin-top: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.resend p {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.resend a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.resend a:hover {
+  color: var(--text-primary);
+}
+
+/* Back link */
+.back-link {
+  margin-top: 24px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out 0.3s forwards;
+}
+
+.back-link a {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-link a:hover {
+  color: var(--text-secondary);
+}
+
+.back-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<div class="bg-glow-gold"></div>
+<div class="bg-glow-blue"></div>
+
+<div class="onboarding-wrapper">
+
+  <div class="logo">
+    <div class="logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-step done"></div>
+    <div class="progress-step active"></div>
+    <div class="progress-step"></div>
+    <div class="progress-step"></div>
+    <span class="progress-label">Step 2 of 4</span>
+  </div>
+
+  <div class="card">
+    <div class="icon-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+    </div>
+
+    <div class="card-header">
+      <h1>Check Your Email</h1>
+      <p>We sent a verification code to<br><span class="email-highlight">investor@example.com</span></p>
+    </div>
+
+    <div class="code-inputs">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autofocus>
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="code-input" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+    </div>
+
+    <button class="btn-primary" onclick="window.location.href='04-personal-info.html'">Verify Email</button>
+
+    <div class="resend">
+      <p>Didn't receive the code? <a href="javascript:void(0)">Resend code</a></p>
+    </div>
+  </div>
+
+  <div class="back-link">
+    <a href="02-create-account.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back to sign up
+    </a>
+  </div>
+
+</div>
+
+<script>
+// Auto-advance code inputs
+const inputs = document.querySelectorAll('.code-input');
+inputs.forEach((input, i) => {
+  input.addEventListener('input', (e) => {
+    if (e.target.value && i < inputs.length - 1) {
+      inputs[i + 1].focus();
+    }
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && !e.target.value && i > 0) {
+      inputs[i - 1].focus();
+    }
+  });
+  // Allow paste of full code
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const data = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    data.split('').forEach((ch, j) => {
+      if (inputs[i + j]) inputs[i + j].value = ch;
+    });
+    if (inputs[Math.min(i + data.length, inputs.length - 1)]) {
+      inputs[Math.min(i + data.length, inputs.length - 1)].focus();
+    }
+  });
+});
+</script>
+</body>
+</html>

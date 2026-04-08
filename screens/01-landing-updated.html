@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Substantiation — Tokenized Energy Commodities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #08080c;
+  --bg-elevated: #0f0f14;
+  --bg-card: #13131a;
+  --bg-card-hover: #1a1a24;
+  --text-primary: #f0ece4;
+  --text-secondary: rgba(240, 236, 228, 0.6);
+  --text-tertiary: rgba(240, 236, 228, 0.35);
+  --gold: #d4a44a;
+  --gold-glow: rgba(212, 164, 74, 0.15);
+  --blue-energy: #4a8bd4;
+  --blue-glow: rgba(74, 139, 212, 0.15);
+  --silver: #a8b0bc;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-hover: rgba(255, 255, 255, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* ═══ NAVIGATION (updated with gold Invest CTA) ═══ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px);
+  background: rgba(8, 8, 12, 0.8);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.nav-logo-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 18px;
+}
+
+.nav-logo-icon span {
+  display: block;
+  height: 2.5px;
+  background: var(--gold);
+  border-radius: 1px;
+}
+
+.nav-logo-text { display: flex; flex-direction: column; }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-sign-in {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-sign-in:hover { color: var(--text-primary); }
+
+/* CHANGED: Cream pill Invest button */
+.nav-invest {
+  padding: 10px 24px;
+  background: #f0ece4;
+  color: #08080c;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-invest:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(240, 236, 228, 0.15);
+}
+
+/* ═══ HERO ═══ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+  padding-top: 80px;
+}
+
+.hero-bg-glow {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.hero-bg-glow-2 {
+  position: absolute;
+  bottom: 20%;
+  left: 5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--blue-glow) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(212, 164, 74, 0.08);
+  border: 1px solid rgba(212, 164, 74, 0.2);
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 28px;
+}
+
+.hero-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.hero h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* CHANGED: Primary CTA is now cream/white */
+.btn-primary {
+  padding: 14px 32px;
+  background: #f0ece4;
+  color: #08080c;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240, 236, 228, 0.15);
+}
+
+.btn-primary svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-secondary {
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-hover);
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-secondary);
+  background: rgba(255,255,255,0.03);
+}
+
+/* Hero 3D placeholder */
+.hero-3d {
+  width: 100%;
+  height: 550px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-coin-placeholder {
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 35% 35%, rgba(212,164,74,0.15) 0%, rgba(212,164,74,0.03) 50%, transparent 70%);
+  border: 1px solid rgba(212,164,74,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-coin-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(212,164,74,0.1) 25%, transparent 50%, rgba(74,139,212,0.05) 75%, transparent 100%);
+  animation: coinRotate 12s linear infinite;
+}
+
+@keyframes coinRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.hero-coin-inner {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(212,164,74,0.06) 0%, var(--bg-card) 50%, rgba(74,139,212,0.03) 100%);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-coin-inner .coin-label {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+
+.hero-coin-inner .coin-sublabel {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ═══ TRUST BAR (placeholder) ═══ */
+.trust-bar {
+  padding: 60px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.trust-bar .container {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.trust-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.trust-logos {
+  display: flex;
+  gap: 48px;
+  align-items: center;
+}
+
+.trust-logos span {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+}
+
+/* ═══ Invest CTA Section ═══ */
+.invest-cta {
+  padding: 120px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.invest-cta::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(212, 164, 74, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-sans);
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.section-subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.7;
+  margin: 0 auto 48px;
+}
+
+/* ═══ FOOTER ═══ */
+footer {
+  padding: 80px 0 40px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.footer-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 300px;
+}
+
+.footer-col h4 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover { color: var(--text-primary); }
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.footer-bottom p {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+
+<!-- NAVIGATION — Updated with gold Invest button -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="nav-logo-text"><span>Energy</span><span>Substantiation</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#products">Tokens</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#scale">Market</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="nav-sign-in" href="#">Sign In</a>
+    <button class="nav-invest">Invest</button>
+  </div>
+</nav>
+
+<!-- HERO — Updated CTAs -->
+<section class="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-glow-2"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label">A First Mover in Asset-Backed Tokens</div>
+      <h1>The Future of<br>Energy is <em>Tokenized</em></h1>
+      <p class="hero-subtitle">
+        Real-world commodity tokens with 1:1 backing, instant settlement,
+        and 24/7 liquidity. No tracking error, no intermediaries, no carry cost.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="location.href='02-create-account.html'">
+          Start Investing
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-secondary">Learn More</button>
+      </div>
+    </div>
+    <div class="hero-3d">
+      <div class="hero-coin-placeholder">
+        <div class="hero-coin-inner">
+          <span class="coin-label">WTIc</span>
+          <span class="coin-sublabel">Tokenized Crude</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust bar placeholder -->
+<section class="trust-bar">
+  <div class="container">
+    <span class="trust-label">Built With</span>
+    <div class="trust-logos">
+      <span>Ethereum</span>
+      <span>Chainlink</span>
+      <span>USDC</span>
+      <span>EY</span>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom CTA Section -->
+<section class="invest-cta">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="section-label">Start Today</div>
+    <h2 class="section-title">Ready to Invest in<br><em style="font-style:italic;color:var(--gold);">Tokenized Energy</em>?</h2>
+    <p class="section-subtitle">
+      Create your account in minutes. Fund with USDC and start building
+      your position in commodity-backed digital assets.
+    </p>
+    <button class="btn-primary" style="font-size:16px;padding:16px 40px;" onclick="location.href='02-create-account.html'">
+      Create Your Account
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">
+          <div class="nav-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="nav-logo-text"><span>Energy</span><span>Substantiation</span></div>
+        </div>
+        <p class="footer-desc">
+          Tokenization is a big thing. Tokenized energy can benefit investors,
+          traders, suppliers, and states. We are first movers building the platform.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Tokens</h4>
+        <a href="#">WTIc — Crude Oil</a>
+        <a href="#">PNGc — Natural Gas</a>
+        <a href="#">BRNc — Brent Crude</a>
+        <a href="#">LNGc — LNG</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Leadership</a>
+        <a href="#">Partnerships</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">Whitepaper</a>
+        <a href="#">Blog</a>
+        <a href="#">Legal</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Energy Substantiation LLC. All rights reserved.</p>
+      <p>Tokenized energy commodities backed 1:1 by physical assets.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
