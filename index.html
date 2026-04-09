@@ -1468,7 +1468,7 @@ footer {
     <li><a href="#team">Team</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
-  <a href="https://wtic-swap.vercel.app/" class="nav-cta">Get $WTIC</a>
+  <a href="#" onclick="openComingSoon(event)" class="nav-cta">Get $WTIC</a>
 </nav>
 
 <!-- ═══════════════ HERO ═══════════════ -->
@@ -1483,7 +1483,7 @@ footer {
         WTIC is a commodity token backed 1:1 by physical crude oil. No futures. No tracking error. No carry costs. Just direct exposure to West Texas Intermediate, on-chain.
       </p>
       <div class="hero-actions fade-in delay-3">
-        <a href="https://wtic-swap.vercel.app/" class="btn-primary">Get $WTIC</a>
+        <a href="#" onclick="openComingSoon(event)" class="btn-primary">Get $WTIC</a>
         <a href="#" class="btn-secondary">Read the Whitepaper</a>
       </div>
     </div>
@@ -1900,7 +1900,7 @@ footer {
       The first tokenized oil product built for real markets.
     </p>
     <div class="hero-actions reveal" style="justify-content:center;">
-      <a href="https://wtic-swap.vercel.app/" class="btn-primary" style="font-size:16px;padding:16px 40px;">Get $WTIC</a>
+      <a href="#" onclick="openComingSoon(event)" class="btn-primary" style="font-size:16px;padding:16px 40px;">Get $WTIC</a>
       <a href="#" class="btn-secondary">Read the Whitepaper</a>
     </div>
   </div>
@@ -2794,6 +2794,42 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
+<!-- ═══════════════ COMING SOON MODAL ═══════════════ -->
+<div id="coming-soon-modal" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transition:opacity 0.25s ease;">
+  <div style="background:#111;border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:48px 40px;max-width:400px;width:90%;text-align:center;position:relative;transform:scale(0.95);transition:transform 0.25s ease;">
+    <button onclick="closeComingSoon()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:20px;line-height:1;padding:4px;" aria-label="Close">&times;</button>
+    <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <h3 style="font-family:var(--font-serif);font-size:24px;color:#fff;margin-bottom:12px;">Coming Soon</h3>
+    <p style="color:rgba(255,255,255,0.55);font-size:15px;line-height:1.6;">WTIC token purchasing is not yet available. We're finalizing the on-chain infrastructure and will launch shortly.</p>
+  </div>
+</div>
+
+<script>
+function openComingSoon(e) {
+  e.preventDefault();
+  const m = document.getElementById('coming-soon-modal');
+  m.style.display = 'flex';
+  requestAnimationFrame(() => {
+    m.style.opacity = '1';
+    m.firstElementChild.style.transform = 'scale(1)';
+  });
+}
+function closeComingSoon() {
+  const m = document.getElementById('coming-soon-modal');
+  m.style.opacity = '0';
+  m.firstElementChild.style.transform = 'scale(0.95)';
+  setTimeout(() => { m.style.display = 'none'; }, 250);
+}
+document.getElementById('coming-soon-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeComingSoon();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeComingSoon();
+});
+</script>
 
 </body>
 </html>
